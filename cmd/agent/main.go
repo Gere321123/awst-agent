@@ -7,22 +7,25 @@ import (
 	"os"
 	"strings"
 
-	"internal/client"
-	"internal/config"
-	"internal/proxy"
-)
-
-const (
-	BackendServer = "http://localhost:3000"
-	ProxyPort     = ":8080"
+	"github.com/Gere321123/awst-agent/internal/client"
+	"github.com/Gere321123/awst-agent/internal/config"
+	"github.com/Gere321123/awst-agent/internal/proxy"
+	"github.com/Gere321123/awst-agent/pkg/utils"
 )
 
 func main() {
+	// Load environment variables
+	envConfig, err := utils.LoadEnv()
+	if err != nil {
+		fmt.Printf("Error loading environment: %v\n", err)
+		os.Exit(1)
+	}
+
 	configManager := config.NewManager()
-	centralClient := client.NewCentralClient(config.CentralServer)
+	centralClient := client.NewCentralClient(envConfig.CentralServer)
 
 	// Check login status
-	if err := checkLogin(configManager, centralClient); err != nil {
+	if err := checkLogin(configManager, centralClient, envConfig); err != nil {
 		fmt.Printf("Login error: %v\n", err)
 		os.Exit(1)
 	}
@@ -35,9 +38,11 @@ func main() {
 	}
 
 	fmt.Printf("Agent running: %s\n", cfg.Email)
+	fmt.Printf("Connecting to central server: %s\n", envConfig.CentralServer)
+	fmt.Printf("Proxying to backend: %s\n", envConfig.BackendServer)
 
 	// Setup proxy
-	agentProxy, err := proxy.NewAgentProxy(BackendServer, cfg.Token)
+	agentProxy, err := proxy.NewAgentProxy(envConfig.BackendServer, cfg.Token)
 	if err != nil {
 		fmt.Printf("Proxy initialization error: %v\n", err)
 		os.Exit(1)
@@ -45,16 +50,16 @@ func main() {
 
 	http.HandleFunc("/", agentProxy.Handler())
 
-	fmt.Printf("Proxy running on: http://localhost%s\n", ProxyPort)
+	fmt.Printf("Proxy running on: http://localhost%s\n", envConfig.ProxyPort)
 	fmt.Println("Press CTRL+C to stop")
 
-	if err := http.ListenAndServe(ProxyPort, nil); err != nil {
+	if err := http.ListenAndServe(envConfig.ProxyPort, nil); err != nil {
 		fmt.Printf("Server error: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func checkLogin(configManager *config.Manager, centralClient *client.CentralClient) error {
+func checkLogin(configManager *config.Manager, centralClient *client.CentralClient, envConfig *utils.EnvConfig) error {
 	if !configManager.Exists() {
 		fmt.Println("\n========================================")
 		fmt.Println("   AWST Agent Setup and Login")
@@ -74,11 +79,11 @@ func checkLogin(configManager *config.Manager, centralClient *client.CentralClie
 			return fmt.Errorf("email and password are required")
 		}
 
-		fmt.Println("\nLogging in to central server...")
+		fmt.Printf("\nLogging in to central server: %s...\n", envConfig.CentralServer)
 
 		response, err := centralClient.Login(email, password)
 		if err != nil {
-			return fmt.Errorf("network error: %v\nCheck if central server is reachable: %s", err, config.CentralServer)
+			return fmt.Errorf("network error: %v\nCheck if central server is reachable: %s", err, envConfig.CentralServer)
 		}
 
 		if !response.Success {

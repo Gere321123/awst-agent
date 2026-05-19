@@ -1,0 +1,33 @@
+# Binaries
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+awst-agent
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Config files with sensitive data
+.env
+/etc/awst/
+config.json
+
+# OS files
+.DS_Store
+Thumbs.db

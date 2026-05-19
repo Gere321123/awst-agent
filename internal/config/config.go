@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+
+	"github.com/Gere321123/awst-agent/pkg/models"
 )
 
 const (
-	ConfigFile    = "/etc/awst/config.json"
-	CentralServer = "http://localhost:5000" // Change to actual central server IP
+	ConfigFile = "/etc/awst/config.json"
 )
 
 type Manager struct {

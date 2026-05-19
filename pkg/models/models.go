@@ -18,3 +18,9 @@ type LoginResponse struct {
 	Email   string `json:"email"`
 	Message string `json:"message"`
 }
+
+type ServerConfig struct {
+	CentralServer string
+	BackendServer string
+	ProxyPort     string
+}

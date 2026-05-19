@@ -1,54 +1,38 @@
-# AWST Agent Telepítési Útmutató
+# AWST Agent
 
-Az AWST Agent egy reverse proxy, amely lehetővé teszi a biztonságos kapcsolódást a központi szerverhez.
+A reverse proxy agent that connects to the central server for authentication.
 
-## 📋 Előfeltételek
+## ⚠️ Prototype Notice
 
-- Linux rendszer (Ubuntu 20.04 vagy újabb)
-- Go 1.19+ (csak fordításhez)
-- Docker és Docker Compose (a központi szerverhez)
-- Root jogosultságok
+> This is a **prototype**. The central website is still under development. Features may change.
 
-## 🚀 Gyors telepítés
-
-### 1. Agent fordítása és telepítése
+## Quick Install
 
 ```bash
-cd Agent
+# Clone and build
+git clone https://github.com/Gere321123/awst-agent.git
+cd awst-agent
 make build
 sudo make install
 
+# Run
 sudo awst-agent
 
+## Service Commands
 
-# Indítás
-sudo systemctl start awst-agent
+sudo systemctl start awst-agent   # Start
+sudo systemctl stop awst-agent    # Stop
+sudo systemctl restart awst-agent # Restart
+sudo systemctl status awst-agent  # Status
+sudo journalctl -u awst-agent -f  # View logs
 
-# Leállítás
-sudo systemctl stop awst-agent
+# Configuration
+## Edit .env file to change server URLs:
 
-# Újraindítás
-sudo systemctl restart awst-agent
+CENTRAL_SERVER=http://localhost:5000   # Change to your server
+BACKEND_SERVER=http://localhost:3000
+PROXY_PORT=:8080
 
-# Állapot ellenőrzés
-sudo systemctl status awst-agent
-
-# Automatikus indítás tiltása
-sudo systemctl disable awst-agent
-
-# Logok (utolsó 100 sor)
-sudo journalctl -u awst-agent -n 100
-
-# Logok folyamatos figyelése
-sudo journalctl -u awst-agent -f
-
-
+# Uninstall
 
 sudo make uninstall
-# vagy manuálisan:
-sudo systemctl stop awst-agent
-sudo systemctl disable awst-agent
-sudo rm -f /etc/systemd/system/awst-agent.service
-sudo rm -f /usr/local/bin/awst-agent
-sudo rm -rf /etc/awst
-sudo systemctl daemon-reload

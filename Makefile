@@ -1,13 +1,18 @@
-.PHONY: build install uninstall clean
+.PHONY: build install uninstall clean run test
 
-BINARY=Agent
+BINARY=awst-agent
 BUILD_DIR=build
 
 build:
 	@echo "Building..."
 	@mkdir -p $(BUILD_DIR)
-	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY) ./cmd/agent
+	go mod download
+	go build -o $(BUILD_DIR)/$(BINARY) ./cmd/agent
 	@echo "✓ Build complete: $(BUILD_DIR)/$(BINARY)"
+
+run: build
+	@echo "Running agent..."
+	./$(BUILD_DIR)/$(BINARY)
 
 install: build
 	@echo "Installing..."
@@ -27,3 +32,12 @@ uninstall:
 
 clean:
 	rm -rf $(BUILD_DIR)
+
+test:
+	go test -v ./...
+
+docker-build:
+	docker build -t awst-agent .
+
+docker-run:
+	docker run -d --name awst-agent --network host awst-agent
