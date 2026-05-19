@@ -1,4 +1,4 @@
-module github.com/Gere321123/awst-agent
+module awst-agent
 
 go 1.21
 

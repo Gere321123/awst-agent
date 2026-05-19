@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/Gere321123/awst-agent/pkg/models"
+	"awst-agent/pkg/models"
 )
 
 type CentralClient struct {

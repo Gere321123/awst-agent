@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Gere321123/awst-agent/internal/client"
-	"github.com/Gere321123/awst-agent/internal/config"
-	"github.com/Gere321123/awst-agent/internal/proxy"
-	"github.com/Gere321123/awst-agent/pkg/utils"
+	"awst-agent/internal/client"
+	"awst-agent/internal/config"
+	"awst-agent/internal/proxy"
+	"awst-agent/pkg/utils"
 )
 
 func main() {

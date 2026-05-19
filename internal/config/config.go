@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Gere321123/awst-agent/pkg/models"
+	"awst-agent/pkg/models"
 )
 
 const (
