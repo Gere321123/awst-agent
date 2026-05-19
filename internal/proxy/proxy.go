@@ -32,21 +32,25 @@ func NewAgentProxy(backendURL, token string) (*AgentProxy, error) {
 	}, nil
 }
 
-func (p *AgentProxy) Handler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		token := r.Header.Get("Authorization")
+// ServeHTTP implementálja a http.Handler interface-t
+func (p *AgentProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
 
-		if token == "" {
-			http.Redirect(w, r, "http://localhost:5000/buy", http.StatusTemporaryRedirect)
-			return
-		}
-
-		// Token validation
-		if token != "Bearer "+p.Token && token != p.Token {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
-			return
-		}
-
-		p.Proxy.ServeHTTP(w, r)
+	if token == "" {
+		http.Redirect(w, r, "http://localhost:5000/buy", http.StatusTemporaryRedirect)
+		return
 	}
+
+	// Token validation
+	if token != "Bearer "+p.Token && token != p.Token {
+		http.Error(w, "Invalid token", http.StatusUnauthorized)
+		return
+	}
+
+	p.Proxy.ServeHTTP(w, r)
+}
+
+// Handler visszaadja a http.HandlerFunc-et (opcionális, kompatibilitás miatt)
+func (p *AgentProxy) Handler() http.HandlerFunc {
+	return p.ServeHTTP
 }

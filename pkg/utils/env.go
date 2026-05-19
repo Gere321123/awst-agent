@@ -14,7 +14,7 @@ func LoadEnv() (*EnvConfig, error) {
 	config := &EnvConfig{
 		CentralServer: getEnv("CENTRAL_SERVER", "http://localhost:5000"),
 		BackendServer: getEnv("BACKEND_SERVER", "http://localhost:3000"),
-		ProxyPort:     getEnv("PROXY_PORT", ":8080"),
+		ProxyPort:     getEnv("PROXY_PORT", ":1133"),
 	}
 
 	return config, nil

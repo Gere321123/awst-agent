@@ -31,7 +31,7 @@ sudo journalctl -u awst-agent -f  # View logs
 
 CENTRAL_SERVER=http://localhost:5000   # Change to your server
 BACKEND_SERVER=http://localhost:3000
-PROXY_PORT=:8080
+PROXY_PORT=:1133
 
 # Uninstall
 
